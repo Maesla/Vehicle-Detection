@@ -18,6 +18,7 @@ The goals / steps of this project are the following:
 [car-notcar]: ./output_images/car-notcar.png
 [car-notcar-hog]: ./output_images/car-notcar-hog.png
 [features]: ./output_images/features.png
+[windows]: ./output_images/image_with_windows.png
 [image1]: ./examples/car_not_car.png
 [image2]: ./examples/HOG_example.jpg
 [image3]: ./examples/sliding_windows.jpg
@@ -109,9 +110,11 @@ I have implemented a full class in order to manage the window search. This class
 
 This class is called Window_Creator and can be found in cell #8.
 
-The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 50 to 250 with an overlap = 0.5.
+The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 50 to 250 with several overlaps
 
-The windows are calculated only in the road, so the skyline is ignored
+The windows are calculated only in the road, so the skyline is ignored. For small windows, for example, only the horizon is scanned and with not overlapping.
+
+![alt text][windows]
 
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
