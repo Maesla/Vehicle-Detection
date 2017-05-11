@@ -105,6 +105,10 @@ The code for extracting the features and training the classifier can be found in
 
 ###Sliding Window Search
 
+####1. Vehicle Classifier
+With the SVM classifier, I have implemented a class, **SimpleVehicleClassifier**. This class is injected by the SVM classifier and the scaler. It gets a 64x64 RGB at 255 image, extract its features, normalize them and predict if the image is a vehicle or not.
+
+
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 I have implemented a full class in order to manage the window search. This class have several method to help with the window search.
 
@@ -113,6 +117,9 @@ This class is called Window_Creator and can be found in cell #8.
 The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 50 to 250 with several overlaps
 
 The windows are calculated only in the road, so the skyline is ignored. For small windows, for example, only the horizon is scanned and with not overlapping.
+
+
+####2. Heatmap
 
 ![alt text][windows]
 
