@@ -15,6 +15,9 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 [//]: # (Image References)
+[car-notcar]: ./output_images/car-notcar.png
+[car-notcar-hog]: ./output_images/car-notcar-hog.png
+[features]: ./output_images/features.png
 [image1]: ./examples/car_not_car.png
 [image2]: ./examples/HOG_example.jpg
 [image3]: ./examples/sliding_windows.jpg
@@ -37,6 +40,15 @@ You're reading it!
 ###Histogram of Oriented Gradients (HOG)
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+I started searching all the images in the vehicle and not vehicle folders.
+
+![alt text][car-notcar]
+The code I use to extract HOG features is implemented inside a class. The class name is Feature_Extractor. This class can be found at cell #3, under the title Extract Features.
+
+This class implements everything necessary for feature extraction. It also implements the hog extraction.
+
+![alt text][car-notcar-hog]
+
 
 The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
 
@@ -53,15 +65,53 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I tried various combinations of parameters. Not only for HOG, for all the feature extractions that can be used in order to train the classifier. Basically I have used trial and error.
+Finally I have used this combination:
+
+| Parameter       | Value |
+|-----------------|-------|
+| Color Space     | LUV   |
+| HOG             | True  |
+| Orient          | 12    |
+| Pixels per cell | 8     |
+| Cell per block  | 2     |
+| Channels        | All   |
+| Spatial         | True  |
+| Size            | 32    |
+| Histogram       | True  |
+| Bins            | 32    |
+
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I have decided to use a SVM classifier.
+
+I apply these steps:
+
+1. I load all the images. I load them in a random order, to avoid several frames together.
+2. I extract all the features for each image, using the parameters explained in the previous point.
+3. I normalize all the features
+4. Then, I create the labels. 1 for vehicles and 0 for non vehicles.
+5. I split the training set. 70% for training and 30% for testing.
+6. I create the classifier and I train it.
+7. I get an accuracy = 0.9803
+
+
+
+The code for extracting the features and training the classifier can be found in cells #5, #6 and #7
+![alt text][features]
+
 
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+I have implemented a full class in order to manage the window search. This class have several method to help with the window search.
+
+This class is called Window_Creator and can be found in cell #8.
+
+The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 50 to 250 with an overlap = 0.5.
+
+The windows are calculated only in the road, so the skyline is ignored
 
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
