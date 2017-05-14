@@ -19,6 +19,10 @@ The goals / steps of this project are the following:
 [car-notcar-hog]: ./output_images/car-notcar-hog.png
 [features]: ./output_images/features.png
 [windows]: ./output_images/image_with_windows.png
+[classifier]: ./output_images/vehicle-classifier.png
+[detection]: ./output_images/vehicle-detection.png
+[heatmap]: ./output_images/heatmap.png
+[pipeline]: ./output_images/detection-pipeline.png
 [image1]: ./examples/car_not_car.png
 [image2]: ./examples/HOG_example.jpg
 [image3]: ./examples/sliding_windows.jpg
@@ -108,43 +112,62 @@ The code for extracting the features and training the classifier can be found in
 ####1. Vehicle Classifier
 With the SVM classifier, I have implemented a class, **SimpleVehicleClassifier**. This class is injected by the SVM classifier and the scaler. It gets a 64x64 RGB at 255 image, extract its features, normalize them and predict if the image is a vehicle or not.
 
+The code can be found at cell #8
+![alt text][classifier]
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+####2. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 I have implemented a full class in order to manage the window search. This class have several method to help with the window search.
 
-This class is called Window_Creator and can be found in cell #8.
+This class is called **Window_Creator** and can be found in cell #10.
 
 The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 50 to 250 with several overlaps
 
-The windows are calculated only in the road, so the skyline is ignored. For small windows, for example, only the horizon is scanned and with not overlapping.
+The windows are calculated only in the road, so the skyline is ignored. For small windows, for example, only the horizon is scanned and without overlapping.
 
 
-####2. Heatmap
+####3. Heatmap
 
-![alt text][windows]
+For helping with detection, I have implemented a **HeatMap**. 
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
-![alt text][image3]
+1. This class gets a positives windows (windows with a positive detection)
+2. It generates a heatmap with all the votes.
+3. It accepts a threshold. All the pixels with less votes are removed
+4. Then, it calculates the labels, and with the labels creates new windows where the vehicles should be.
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+I have implemented also a FixedQueue. With this queue, I can cache the previous positive windows. It has a fixed size. If a new frame enters, the info from the oldest frame goes out.
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Heatmap and FixedQueue can be found at cells #11 and #12
 
-![alt text][image4]
+![alt text][heatmap]
+
+####4. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+
+Finally I have put all together in a single class. This class is called **VehicleDetector** and it is injected by **SimpleVehicleClassifier**, **Window_Creator** and **HeatMap**, all explained before. The code can be found at cell #14
+
+This class implements the pipeline.
+
+1. It gets an image
+2. It iterates through the windows and caches the positives.
+3. it feeds the heatmap with the positive. The heatmap filters with its own configuration.
+4. It draws the positives returned by the heatmap 
+
+
+![alt text][detection]
 ---
 
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./out_project_video.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
+The pipeline is explained in the section above. The false positive are filter by a heatmap and a threshold value.
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+In the image, the frame count = XX and the threshold = YY. This means that if a positive is detected, it will be taken into account for the next XX frames. If in this XX frames, the zone has more than YY votes, a vehicle is detected.
+![alt text][pipeline]
 
 ### Here are six frames and their corresponding heatmaps:
 
