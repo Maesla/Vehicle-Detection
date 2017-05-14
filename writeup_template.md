@@ -23,14 +23,6 @@ The goals / steps of this project are the following:
 [detection]: ./output_images/vehicle-detection.png
 [heatmap]: ./output_images/heatmap.png
 [pipeline]: ./output_images/detection-pipeline.png
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -53,20 +45,6 @@ The code I use to extract HOG features is implemented inside a class. The class 
 This class implements everything necessary for feature extraction. It also implements the hog extraction.
 
 ![alt text][car-notcar-hog]
-
-
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
-
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
-
-![alt text][image1]
-
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
-![alt text][image2]
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
@@ -124,10 +102,10 @@ The main method is get_complex_windows. This method returns an window array. I h
 
 The windows are calculated only in the road, so the skyline is ignored. For small windows, for example, only the horizon is scanned and without overlapping.
 
-
+![alt text][windows]
 ####3. Heatmap
 
-For helping with detection, I have implemented a **HeatMap**. 
+For helping with detection, I have implemented a **HeatMap** class. 
 
 
 1. This class gets a positives windows (windows with a positive detection)
@@ -149,7 +127,7 @@ This class implements the pipeline.
 
 1. It gets an image
 2. It iterates through the windows and caches the positives.
-3. it feeds the heatmap with the positive. The heatmap filters with its own configuration.
+3. it feeds the heatmap with the positive windows. The heatmap filters with its own configuration.
 4. It draws the positives returned by the heatmap 
 
 
