@@ -58,11 +58,11 @@ Finally I have used this combination:
 | Orient          | 12    |
 | Pixels per cell | 8     |
 | Cell per block  | 2     |
-| Channels        | All   |
+| Channels        | 0   |
 | Spatial         | True  |
 | Size            | 32    |
 | Histogram       | True  |
-| Bins            | 32    |
+| Bins            | 64    |
 
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
@@ -98,7 +98,7 @@ I have implemented a full class in order to manage the window search. This class
 
 This class is called **Window_Creator** and can be found in cell #10.
 
-The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 50 to 250 with several overlaps
+The main method is get_complex_windows. This method returns an window array. I have used several sizes. From 64 to 128 with several overlaps
 
 The windows are calculated only in the road, so the skyline is ignored. For small windows, for example, only the horizon is scanned and without overlapping.
 
