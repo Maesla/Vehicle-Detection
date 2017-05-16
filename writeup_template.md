@@ -88,7 +88,7 @@ The code for extracting the features and training the classifier can be found in
 ###Sliding Window Search
 
 ####1. Vehicle Classifier
-With the SVM classifier, I have implemented a class, **SimpleVehicleClassifier**. This class is injected by the SVM classifier and the scaler. It gets a 64x64 RGB at 255 image, extract its features, normalize them and predict if the image is a vehicle or not.
+With the SVM classifier, I have implemented a class, **SimpleVehicleClassifier**. This class is injected by the SVM classifier and the scaler. It gets a 64x64 RGB at 255 image, extract its features, normalize them and predict if the image is a vehicle or not. The prediction is based on decision_function. The higher is the value returned by the function, the higher is probability that it is a vehicle and not any other thing. If the confident is bigger than a threshold, the image is predicted as a vehicle.
 
 The code can be found at cell #8
 ![alt text][classifier]
@@ -144,7 +144,10 @@ Here's a [link to my video result](./out_project_video.mp4)
 
 The pipeline is explained in the section above. The false positive are filter by a heatmap and a threshold value.
 
-In the image, the frame count = 3 and the threshold = 3. This means that if a positive is detected, it will be taken into account for the next 3 frames. If in this 3 frames, the zone has more than 3 votes, a vehicle is detected.
+In the image, the frame count =  10 and the threshold = 5. This means that if a positive is detected, it will be taken into account for the next 10 frames. If in this 5 frames, the zone has more than 3 votes, a vehicle is detected.
+
+The threshold for the decision function is set to 0.8.
+
 ![alt text][pipeline]
 
 ---
@@ -156,5 +159,9 @@ In the image, the frame count = 3 and the threshold = 3. This means that if a po
 For me, the more problematic step is the window generation. With an accuracy of 99%, one could expect a much better result. If you take a car image and use the classifier, the result is pretty good. The problem is that it is very difficult that the window takes exactly this type of image. Normally, it gets only a part of the vehicle. Of course, a way to improve this is to increase the windows, but this has to two disadvantages:
 
 1. Performance. More windows mean more loops.
-2. False positive. More windows means more possibilities for false positives.  
+2. False positive. More windows means more possibilities for false positives.
+
+Other very problematic issue is the parameter optimization.
+
+Right now, I am using 3 parameter. Frames, heatmap threshold and classifier threshold. Finding the right balance between this three parameter can be very difficult.
 
